@@ -3,6 +3,10 @@ const express = require('express');
 
 const app = express();
 
+// This is Middleware
+// A function which is used to modify the incoming request data
+app.use(express.json());
+
 // app.get('/', (req, res) => {
 //   res
 //     .status(200)
@@ -27,6 +31,29 @@ app.get('/api/v1/tours', (req, res) => {
       tours,
     },
   });
+});
+
+// Create
+app.post('/api/v1/tours', (req, res) => {
+  // console.log(req.body);
+
+  const newId = tours[tours.length - 1].id + 1;
+  const newTour = Object.assign({ id: newId }, req.body);
+
+  tours.push(newTour);
+
+  fs.writeFile(
+    `${__dirname}/dev-data/data/tours-simple.json`,
+    JSON.stringify(tours),
+    (err) => {
+      res.status(201).json({
+        status: 'success',
+        data: {
+          tour: newTour,
+        },
+      });
+    }
+  );
 });
 
 const port = 3000;
