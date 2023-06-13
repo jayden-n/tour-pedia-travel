@@ -33,6 +33,27 @@ app.get('/api/v1/tours', (req, res) => {
   });
 });
 
+app.get('/api/v1/tours/:id', (req, res) => {
+  console.log(req.params);
+
+  const id = parseInt(req.params.id);
+
+  const tour = tours.find((el) => {
+    // Add this return
+    return el.id === id;
+  });
+  if (!tour) {
+    return res.status(404).json({ status: 'Fail', message: 'Invalid ID' });
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tour,
+    },
+  });
+});
+
 // Create
 app.post('/api/v1/tours', (req, res) => {
   // console.log(req.body);
