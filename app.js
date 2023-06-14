@@ -7,13 +7,25 @@ const app = express();
 // A function which is used to modify the incoming request data
 app.use(express.json());
 
+app.use((req, res, next) => {
+  console.log('hello from the middleware 👋🏼');
+  next();
+});
+
+app.use((req, res, next) => {
+  req.requestTime = new Date().toISOString();
+  next();
+});
+
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 );
 
 const getAllTours = (req, res) => {
+  console.log(req.requestTime);
   res.status(200).json({
     status: 'success',
+    requestedAt: req.requestTime,
     // for clients to easily see how many objects in an array we're sending
     results: tours.length,
     data: {
